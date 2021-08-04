@@ -27,7 +27,24 @@ public class User {
     private String password;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "cart_id", unique = true)
+    @JoinColumn(name = "cart_id", unique = true, nullable = false)
     private Cart cart;
 
+    public User() {
+    }
+
+    public User(String name, String email, String login, String password, Cart cart) {
+        this.name = name;
+        this.email = email;
+        this.login = login;
+        this.password = password;
+        this.cart = cart;
+    }
+
+    public User(String name, String email, String login, String password) {
+        this.name = name;
+        this.email = email;
+        this.login = login;
+        this.password = password;
+    }
 }
