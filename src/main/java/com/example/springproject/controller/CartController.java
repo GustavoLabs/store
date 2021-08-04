@@ -2,8 +2,10 @@ package com.example.springproject.controller;
 
 import com.example.springproject.entity.Cart;
 import com.example.springproject.entity.User;
+import com.example.springproject.model.response.UserResponseDTO;
 import com.example.springproject.repositories.CartRepository;
 import com.example.springproject.repositories.UserRepository;
+import com.example.springproject.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,19 +16,21 @@ import java.util.Optional;
 public class CartController {
 
     @Autowired
-    CartRepository cartRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @PostMapping
-    public Cart createCart(Cart cart){
-        return cartRepository.save(cart);
-    }
+    CartService cartService;
 
     @GetMapping("/{id}")
-    public String getUserByIdCart(@PathVariable Long id){
-        Optional<Cart> cart = cartRepository.findById(id);
-        return cart.get().getUser().getName();
+    public Cart findCartByIDd(@PathVariable Long id){
+        return cartService.findCartById(id);
     }
+
+    @GetMapping("/user/{id}")
+    public UserResponseDTO findUserByIdCart(@PathVariable Long id){
+        return cartService.getUserByCartId(id);
+    }
+
+    @GetMapping("/user")
+    public String getUserLogin(@RequestParam Long id){
+        return cartService.getUserLogin(id);
+    }
+
 }

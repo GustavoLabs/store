@@ -1,8 +1,10 @@
 package com.example.springproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,8 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    private String userLogin;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -24,9 +28,14 @@ public class Cart {
     private List<Product> products;
 
     @OneToOne(mappedBy = "cart")
+    @JsonBackReference
     private User user;
 
     public Cart() {
+    }
+
+    public Cart(String userLogin) {
+        this.userLogin = userLogin;
     }
 
     public List<Product> getProducts(){
