@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(255) UNIQUE NOT NULL,
   `name` varchar(255)  NOT NULL,
   `login` varchar(30) UNIQUE NOT NULL,
-  `password` varchar(30) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `cart_id` bigint(20) unsigned NOT null,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`)
