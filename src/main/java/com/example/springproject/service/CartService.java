@@ -39,7 +39,7 @@ public class CartService {
         Optional<Cart> cart = cartRepository.findById(id);
         User user = cart.get().getUser();
         if (user == null){
-            throw new UserNotFoundException(String.format("User %s not found", id));
+            throw new CartNotFoundException(String.format("Cart %s not found", id));
         }
         return new UserResponseDTO(user);
     }
