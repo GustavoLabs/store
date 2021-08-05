@@ -1,5 +1,6 @@
 package com.example.springproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -32,11 +33,6 @@ public class Product {
     @Max(1)
     private double discount;
 
-    @ManyToMany(mappedBy = "products")
-    private List<Cart> carts = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "products")
-    private List<Order> orders = new ArrayList<>();
 
 
     public Product() {
@@ -48,4 +44,5 @@ public class Product {
         this.price = price;
         this.discount = discount;
     }
+
 }

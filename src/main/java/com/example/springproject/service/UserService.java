@@ -23,9 +23,9 @@ public class UserService {
     private PasswordEncoder encoder;
 
     @Autowired
-    CartService cartService;
+    private CartService cartService;
 
-    public UserResponseDTO addUser(UserRequestDTO userRequestDto){
+    public UserResponseDTO addUser(UserRequestDTO userRequestDto) {
         User user = userRequestDto.build();
         user.setPassword(encoder.encode(user.getPassword()));
         user.setCart(cartService.createNewCart(user.getLogin()));
@@ -33,28 +33,31 @@ public class UserService {
         return new UserResponseDTO(user);
     }
 
-    public UserResponseDTO findUserById(Long id){
+    public UserResponseDTO findUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         User newUser = user.orElse(null);
-        if (newUser == null){
+        if (newUser == null) {
             throw new UserNotFoundException(String.format("User %s not found", id));
+        } else {
+            return new UserResponseDTO(newUser);
         }
-        return new UserResponseDTO(newUser);
     }
 
-    public List<UserResponseDTO> getAllUsers(){
+
+    public List<UserResponseDTO> getAllUsers() {
         List<UserResponseDTO> userDTO = new ArrayList<>();
-        for (User user: userRepository.findAll()) {
+        for (User user : userRepository.findAll()) {
             userDTO.add(new UserResponseDTO(user));
         }
         return userDTO;
     }
 
-    public void deleteUserByLogin(String login){
+    public void deleteUserByLogin(String login) {
         User user = userRepository.findByLoginContainingIgnoreCase(login);
-        if (user == null){
+        if (user == null) {
             throw new UserNotFoundException(String.format("User login:%s not found", login));
+        } else {
+            userRepository.delete(user);
         }
-        userRepository.delete(user);
     }
 }

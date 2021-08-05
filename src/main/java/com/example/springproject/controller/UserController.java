@@ -1,5 +1,7 @@
 package com.example.springproject.controller;
 
+import com.example.springproject.entity.Cart;
+import com.example.springproject.entity.Product;
 import com.example.springproject.entity.User;
 import com.example.springproject.model.request.UserRequestDTO;
 import com.example.springproject.model.response.UserResponseDTO;

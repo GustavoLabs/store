@@ -1,5 +1,7 @@
 package com.example.springproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -34,7 +36,7 @@ public class Order {
         this.date = date;
     }
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     @JoinTable(
             name = "order_item",
             joinColumns = @JoinColumn(name="order_id", referencedColumnName = "id"),

@@ -1,8 +1,7 @@
 package com.example.springproject.repositories;
 
-import com.example.springproject.entity.Cart;
 import com.example.springproject.entity.Product;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface ProductRepository extends CrudRepository<Product, Long> {
+public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
 }

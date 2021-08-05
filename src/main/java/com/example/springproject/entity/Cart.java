@@ -1,6 +1,7 @@
 package com.example.springproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,16 +20,17 @@ public class Cart {
     @NotBlank
     private String userLogin;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     @JoinTable(
             name = "cart_products",
             joinColumns = @JoinColumn(name="cart_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName = "id")
     )
+    @JsonBackReference
     private List<Product> products;
 
     @OneToOne(mappedBy = "cart")
-    @JsonBackReference
+    @JsonIgnore
     private User user;
 
     public Cart() {
@@ -44,4 +46,6 @@ public class Cart {
         }
         return products;
     }
+
+
 }
