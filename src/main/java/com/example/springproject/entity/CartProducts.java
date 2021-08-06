@@ -1,30 +1,24 @@
 package com.example.springproject.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "cart_products")
 public class CartProducts {
 
     @EmbeddedId
-    CartProductsKey id;
+    private CartProductsKey cartProductsKeyId;
 
-    @ManyToOne
-    @MapsId("productId")
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @ManyToOne
-    @MapsId("cartId")
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
+    @Column(name = "quantity")
+    @Min(1)
     private int quantity;
 
-    
 }

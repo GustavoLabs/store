@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Data
@@ -20,14 +21,15 @@ public class Cart {
     @NotBlank
     private String userLogin;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_products",
-            joinColumns = @JoinColumn(name="cart_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName = "id")
-    )
-    @JsonBackReference
-    private List<Product> products;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "cart_products",
+//            joinColumns = @JoinColumn(name="cart_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName = "id")
+//    )
+//    @JsonBackReference
+//    private List<Product> products;
 
     @OneToOne(mappedBy = "cart")
     @JsonIgnore
@@ -39,13 +41,5 @@ public class Cart {
     public Cart(String userLogin) {
         this.userLogin = userLogin;
     }
-
-    public List<Product> getProducts(){
-        if (products == null){
-            products = new ArrayList<>();
-        }
-        return products;
-    }
-
 
 }

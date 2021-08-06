@@ -13,9 +13,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Embeddable
 public class CartProductsKey implements Serializable {
-    @Column(name = "cart_id")
-    Long cartId;
-
-    @Column(name = "product_id")
-    Long productId;
+    private Long cartId;
+    private Long productId;
 }
