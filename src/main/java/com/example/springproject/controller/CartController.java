@@ -28,9 +28,4 @@ public class CartController {
         return cartService.getUserByCartId(id);
     }
 
-    @GetMapping("/user")
-    public String getUserLogin(@RequestParam Long id){
-        return cartService.getUserLogin(id);
-    }
-
 }

@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(255) NOT NULL,
   `cart_id` bigint(20) unsigned NOT null,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`)
+  FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`),
+  CONSTRAINT UNIQUE_CART_ID UNIQUE (cart_id)
 );
 
 CREATE TABLE IF NOT EXISTS `cart_products` (
@@ -30,7 +31,8 @@ CREATE TABLE IF NOT EXISTS `cart_products` (
   `product_id` bigint(20) unsigned NOT null,
   `quantity` int(4) NOT NULL,
   FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`),
-  FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
+  FOREIGN KEY (`product_id`) REFERENCES `product`(`id`),
+  PRIMARY KEY (cart_id, product_id )
 );
 
 CREATE TABLE IF NOT EXISTS `order` (

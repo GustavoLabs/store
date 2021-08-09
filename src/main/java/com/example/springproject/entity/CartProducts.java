@@ -1,8 +1,7 @@
 package com.example.springproject.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -11,14 +10,28 @@ import javax.validation.constraints.Min;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "cart_products")
 public class CartProducts {
 
     @EmbeddedId
+    @NonNull
     private CartProductsKey cartProductsKeyId;
 
     @Column(name = "quantity")
     @Min(1)
+    @NonNull
     private int quantity;
 
+    @ManyToOne
+    @MapsId("cartId")
+    @JoinColumn(name = "cart_id")
+    @JsonIgnore
+    private Cart cart;
+
+    @ManyToOne
+    @MapsId("productId")
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
+    private Product product;
 }

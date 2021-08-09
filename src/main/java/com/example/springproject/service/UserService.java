@@ -1,9 +1,11 @@
 package com.example.springproject.service;
 
+import com.example.springproject.entity.Cart;
 import com.example.springproject.entity.User;
 import com.example.springproject.exception.UserNotFoundException;
 import com.example.springproject.model.request.UserRequestDTO;
 import com.example.springproject.model.response.UserResponseDTO;
+import com.example.springproject.repositories.CartRepository;
 import com.example.springproject.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +30,7 @@ public class UserService {
     public UserResponseDTO addUser(UserRequestDTO userRequestDto) {
         User user = userRequestDto.build();
         user.setPassword(encoder.encode(user.getPassword()));
-        user.setCart(cartService.createNewCart(user.getLogin()));
+        user.setCart(cartService.createNewCart().setUser(user));
         userRepository.save(user);
         return new UserResponseDTO(user);
     }

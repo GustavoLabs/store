@@ -29,11 +29,11 @@ public class CartService {
         if (!cart.isPresent()){
             throw new CartNotFoundException(String.format("Cart %s not found", id));
         }
-        return cart.orElse(null);
+        return cart.get();
     }
 
-    public Cart createNewCart(@NotBlank String userLogin){
-        return new Cart(userLogin);
+    public Cart createNewCart(){
+        return new Cart();
     }
 
 
@@ -47,10 +47,8 @@ public class CartService {
         }
     }
 
-    public String getUserLogin(Long id){
-        Optional<Cart> cart = cartRepository.findById(id);
-        return cart.map
-                (Cart::getUserLogin)
-                .orElse(null);
+    public Cart save(Cart cart){
+        return cartRepository.save(cart);
     }
+
 }

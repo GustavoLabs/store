@@ -23,7 +23,7 @@ public class CartProductsService {
     public CartProducts addProductToCart(Long cartId, Long productId, int quantity){
         Cart cart = cartService.findCartById(cartId);
         Product product = productService.findProductById(productId);
-        CartProducts cartProducts = new CartProducts(new CartProductsKey(cart.getId(), product.getId()), quantity);
+        CartProducts cartProducts = new CartProducts(new CartProductsKey(cart.getId(), product.getId()), quantity, cart, product);
         cartProductsRepository.save(cartProducts);
         return  cartProducts;
     }

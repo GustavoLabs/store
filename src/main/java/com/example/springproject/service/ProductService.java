@@ -29,11 +29,10 @@ public class ProductService {
 
     public Product findProductById(@Min(1) Long id) {
         Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent()) {
-            return product.get();
-        } else {
+        if (!product.isPresent()) {
             throw new ProductNotFoundException(String.format("Product %s not found", id));
         }
+        return product.get();
     }
 
     public Iterable<Product> findAllProducts() {

@@ -2,44 +2,36 @@ package com.example.springproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
+@Accessors(chain = true)
 public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    private String userLogin;
-
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "cart_products",
-//            joinColumns = @JoinColumn(name="cart_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName = "id")
-//    )
-//    @JsonBackReference
-//    private List<Product> products;
-
-    @OneToOne(mappedBy = "cart")
-    @JsonIgnore
-    private User user;
-
     public Cart() {
     }
 
-    public Cart(String userLogin) {
-        this.userLogin = userLogin;
-    }
+    @OneToMany(mappedBy = "cart")
+    Set<CartProducts> cartProducts;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "cart")
+    private User user;
 }
