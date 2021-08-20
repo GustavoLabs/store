@@ -1,6 +1,7 @@
 package com.example.springproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "product")
+@AllArgsConstructor
 public class Product {
 
     @Id
