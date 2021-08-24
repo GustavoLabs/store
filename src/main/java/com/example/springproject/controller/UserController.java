@@ -26,8 +26,9 @@ public class UserController {
         return userService.addUser(user);
     }
 
-    @GetMapping
-    public UserResponseDTO getUserById(@Min(1) @RequestParam Long id){
+
+    @GetMapping("/{id}")
+    public UserResponseDTO getUserById(@Min(1) @PathVariable Long id){
         return userService.findUserById(id);
     }
 
