@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/product")
@@ -19,45 +20,46 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    //@PostMapping
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT })
-    public ResponseEntity<Product> saveProduct(@RequestBody @Valid Product product) {
-        productService.saveProduct(product);
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<Product> createProduct(@RequestBody @Valid Product product) {
+        log.info("Request to create  product: {}", product);
+        return new ResponseEntity<>(productService.saveProduct(product), HttpStatus.CREATED);
     }
 
-
-    @GetMapping
-    public Iterable<Product> findAllProducts() {
-        return productService.findAllProducts();
-    }
-
-
-    @GetMapping(path = "/page/{numPage}/{quantityPage}")
-    public Iterable<Product> getAllProductsWithPagination(@PathVariable int numPage, @PathVariable int quantityPage) {
-        return productService.getAllProductsWithPagination(numPage, quantityPage);
-    }
-
-    @GetMapping(path = "/{id}")
-    public ResponseEntity findProductById(@PathVariable Long id) {
-
-        try {
-            return new ResponseEntity(productService.findProductById(id), HttpStatus.OK);
-        } catch (ProductNotFoundException e) {
-            log.error(e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@RequestBody @Valid Product product, @PathVariable Long id){
+        log.info("Request to update  product: {}", product);
+        return new ResponseEntity<>(productService.saveProduct(product), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+        log.info("Request to delete  product: {}", id);
+        return productService.deleteProduct(id);
     }
 
-//    @GetMapping("/name/{id}")
-//    public String returnProductName(@PathVariable Long id){
-//        return findProductById(id).getName();
-//    }
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Product> findProductById(@PathVariable Long id) {
+        log.info("Request to get product: {}", id);
+        return productService.getProductById(id);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> findAllProducts() {
+        log.info("Request to retrieve all products");
+        return productService.findAllProducts();
+    }
+
+    @GetMapping(path = "/page")
+    public Iterable<Product> getAllProductsWithPagination(@RequestParam int numPage, @RequestParam int quantityPage) {
+        log.info("Request to retrieve products with pagination num page:{}  quantityPage:{}", numPage, quantityPage);
+        return productService.getAllProductsWithPagination(numPage, quantityPage);
+    }
+
+
+
+
+
+
 
 }
