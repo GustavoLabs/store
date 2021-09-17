@@ -5,6 +5,7 @@ import com.example.springproject.entity.Product;
 import com.example.springproject.exception.ProductNotFoundException;
 import com.example.springproject.repositories.CartRepository;
 import com.example.springproject.repositories.ProductRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,9 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -59,7 +65,7 @@ public class ProductService {
             System.out.println(products);
             return new ResponseEntity(products, HttpStatus.OK);
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
     public Iterable<Product> getAllProductsWithPagination(int numPage, int quantityPage) {
@@ -72,13 +78,25 @@ public class ProductService {
     public ResponseEntity<String> deleteProduct(Long id) {
         try {
             Product p = findProductById(id);
-            String deleteMessage = "Product with id " + p.getId() + " was deleted";
-            productRepository.deleteById(p.getId());
-            return new ResponseEntity(deleteMessage, HttpStatus.NO_CONTENT);
+            String deleteMessage = "Product with id " + id + " was deleted";
+            productRepository.deleteById(id);
+            return new ResponseEntity(deleteMessage, HttpStatus.OK);
         } catch (ProductNotFoundException e) {
-            log.error(e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+           return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    public ResponseEntity<Product> updateProduct( Long id,  Map<String, Object> map) {
+        Product product = findProductById(id);
+        HashMap<String, Object> productDB = new ObjectMapper().convertValue(product, HashMap.class);
+        for(Map.Entry<String, Object> entry: productDB.entrySet()) {
+            Object currentField = map.get(entry.getKey());
+            if(currentField != null){
+                entry.setValue(currentField);
+            }
+        }
+        Product newProduct = new ObjectMapper().convertValue(productDB, Product.class);
+        return new ResponseEntity(saveProduct(newProduct), HttpStatus.OK);
     }
 
 

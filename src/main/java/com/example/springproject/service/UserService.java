@@ -8,9 +8,12 @@ import com.example.springproject.model.response.UserResponseDTO;
 import com.example.springproject.repositories.CartRepository;
 import com.example.springproject.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.xml.ws.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,12 +57,24 @@ public class UserService {
         return userDTO;
     }
 
-    public void deleteUserByLogin(String login) {
-        User user = userRepository.findByLoginContainingIgnoreCase(login);
-        if (user == null) {
-            throw new UserNotFoundException(String.format("User login:%s not found", login));
-        } else {
-            userRepository.delete(user);
+    public void deleteUser(Long id) {
+        User user = findUserById_ReturnUser(id);
+        userRepository.delete(user);
+    }
+
+    public ResponseEntity validPassword(Long id, String password){
+        User user = findUserById_ReturnUser(id);
+        boolean valid = encoder.matches(password, user.getPassword());
+        HttpStatus status = (valid) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
+
+        return ResponseEntity.status(status).body(valid);
+    }
+
+    private User findUserById_ReturnUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
         }
+        throw new UserNotFoundException(String.format("User %s not found", id));
     }
 }

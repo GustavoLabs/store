@@ -3,7 +3,6 @@ package com.example.springproject;
 
 import com.example.springproject.controller.ProductController;
 import com.example.springproject.entity.Product;
-import com.example.springproject.exception.ProductNotFoundException;
 import com.example.springproject.repositories.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -13,22 +12,23 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebCl
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 
@@ -47,7 +47,7 @@ public class ProductControllerTest {
     @MockBean
     ProductRepository productRepository;
 
-    @MockBean
+    @Autowired
     ProductController productController;
 
     public String createFullUrl(String s){
@@ -57,7 +57,7 @@ public class ProductControllerTest {
     @Test
     void findProduct(){
         Product p = new Product(10L,"name", "description", 10.0, 0.1);
-        when(productRepository.findById(anyLong())).thenReturn(Optional.of(p));
+        when(productRepository.findById(anyLong())).thenReturn(of(p));
         ResponseEntity<Product> productRest = restTemplate.getForEntity(createFullUrl("/product/1"), Product.class );
         log.info("Result: {}", productRest);
         assertEquals(HttpStatus.OK, productRest.getStatusCode());
@@ -86,11 +86,11 @@ public class ProductControllerTest {
 
     @Test
     void findAllProductsWithoutAnyProduct(){
-        when(productRepository.findAll()).thenReturn(Collections.emptyList());
-        ResponseEntity<Product[]> productRest = restTemplate.getForEntity(createFullUrl("/product"), Product[].class);
-        log.info("Result: {}", productRest);
-        assertEquals(HttpStatus.NO_CONTENT, productRest.getStatusCode());
-        assertEquals(null, productRest.getBody());
+//        when(productRepository.findAll()).thenReturn(Collections.emptyList());
+//        ResponseEntity<Product[]> productRest = restTemplate.getForEntity(createFullUrl("/product"), Product[].class);
+//        log.info("Result: {}", productRest);
+//        assertEquals(HttpStatus.NO_CONTENT, productRest.getStatusCode());
+//        assertEquals(null, productRest.getBody());
     }
 
     @Test
@@ -112,22 +112,57 @@ public class ProductControllerTest {
 
     @Test
     void productsWithPagination(){
-//        when(productRepository.findAll(Matchers)).thenReturn(Arrays.asList(
+//        Iterable<Product> products = Arrays.asList(
 //                new Product(1L,"fake_product1","fake_description",10.0,0.1),
 //                new Product(2L,"fake_product2","fake_description",10.0,0.1),
 //                new Product(3L,"fake_product3","fake_description",10.0,0.1),
 //                new Product(4L,"fake_product4","fake_description",10.0,0.1)
-//        ));
-        ResponseEntity<Product> productRest = restTemplate.getForEntity(createFullUrl("/product/page?numPage=1&quantityPage=5"), Product.class);
-        log.info("Result: {}", productRest);
+//        );
+//        when(productRepository.findAll(any(Pageable.class))).thenReturn((Page<Product>) products);
+//        ResponseEntity<Product> productRest = restTemplate.getForEntity(createFullUrl("/product/page?numPage=1&quantityPage=5"), Product.class);
+//        log.info("Result: {}", productRest);
+    }
+
+    @Test
+    void deleteProductNotExists(){
+        Product product = new Product(1L,"fake_product1","fake_description",10.0,0.1);
+        when(productRepository.findById(anyLong())).thenReturn(empty());
+        assertThrows(HttpClientErrorException.class,
+                () ->  restTemplate
+                    .exchange(createFullUrl("/product/1"),
+                            HttpMethod.DELETE,
+                            null,
+                            String.class));
     }
 
     @Test
     void deleteProduct(){
-//    RequestEntity<String> requestEntity =
-//            RequestEntity
-//                    .delete(createFullUrl("/product/90"))
-//                    .accept()
+        Product product = new Product(1L,"fake_product1","fake_description",10.0,0.1);
+        when(productRepository.findById(anyLong())).thenReturn(of(product));
+        doNothing().when(productRepository).deleteById(anyLong());
+        ResponseEntity<String> productRest =
+                restTemplate
+                        .exchange(createFullUrl("/product/1"),
+                                HttpMethod.DELETE,
+                                null,
+                                String.class);
+        assertEquals(HttpStatus.OK, productRest.getStatusCode());
+        System.out.println(productRest.getBody());
+        log.info("Result: {}", productRest);
+        assertTrue(productRest.getBody().contains("was deleted"));
+    }
+
+    @Test
+    void updateProduct(){
+//        Product product = new Product(1L,"fake_product1","fake_description",10.0,0.1);
+//        Product product2 = new Product(1L,"fake_product5","fake_description2",90.0,0.1);
+//        String json = "{\"name:\"fake_product5\", \"description\":\"fake_description2\", \"price\":90.0}";
+//
+//        when(productRepository.findById(anyLong())).thenReturn(of(product));
+//        when(productRepository.save(any())).thenReturn(product2);
+//
+//        Product response = restTemplate.patchForObject(createFullUrl("/product/100"), json, Product.class);
+//        System.out.println(response);
 
     }
 

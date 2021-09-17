@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -54,6 +55,11 @@ public class ProductController {
     public Iterable<Product> getAllProductsWithPagination(@RequestParam int numPage, @RequestParam int quantityPage) {
         log.info("Request to retrieve products with pagination num page:{}  quantityPage:{}", numPage, quantityPage);
         return productService.getAllProductsWithPagination(numPage, quantityPage);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Map<String, Object> map) {
+        return productService.updateProduct(id, map);
     }
 
 
