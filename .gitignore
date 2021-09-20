@@ -34,3 +34,5 @@ build/
 
 ### properties ###
 src/main/resources/application.properties
+config/application-local.properties
+config/application-docker.properties

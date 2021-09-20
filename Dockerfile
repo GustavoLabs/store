@@ -1,4 +1,9 @@
-FROM openjdk:8
-ADD target/docker-spring-boot.jar docker-spring-boot.jar
+FROM openjdk:8-jre-alpine
+WORKDIR /usr/app
+COPY target/*.jar ./app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "docker-spring-boot"]
+ENV PROFILES="docker"
+CMD ["java", "-jar", "app.jar", "--spring.profiles.active=${PROFILES}"]
+
+
+

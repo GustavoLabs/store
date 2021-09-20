@@ -1,17 +1,13 @@
 package com.example.springproject.controller;
 
 import com.example.springproject.entity.Cart;
-import com.example.springproject.entity.User;
 import com.example.springproject.model.response.ProductQuantityDTO;
 import com.example.springproject.model.response.UserResponseDTO;
-import com.example.springproject.repositories.CartRepository;
-import com.example.springproject.repositories.UserRepository;
 import com.example.springproject.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cart")

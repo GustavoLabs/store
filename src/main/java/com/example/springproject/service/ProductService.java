@@ -1,9 +1,7 @@
 package com.example.springproject.service;
 
-import com.example.springproject.entity.Cart;
 import com.example.springproject.entity.Product;
 import com.example.springproject.exception.ProductNotFoundException;
-import com.example.springproject.repositories.CartRepository;
 import com.example.springproject.repositories.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
