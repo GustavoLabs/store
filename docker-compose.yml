@@ -1,13 +1,22 @@
 # Use root/example as user/password credentials
-#docker-compose up -d
 version: '3.1'
 
 services:
 
   db:
-    image: mariadb
+    image: mariadb:10.6.4
     ports:
       - 3306:3306
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: PASS
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+    - D:/Desenvolvimento/DB/10.6.4:/var/lib/mysql
+
+  store:
+    image: docker-spring
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./config/application-docker.properties:/usr/app/application-docker.properties
